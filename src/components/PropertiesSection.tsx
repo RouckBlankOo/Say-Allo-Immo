@@ -2,11 +2,17 @@ import { useState, useEffect } from "react";
 import PropertyCard from "./PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import {
+  Navigation,
+  Pagination,
+  Autoplay,
+  EffectCoverflow,
+} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import "swiper/css/effect-coverflow";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 const PropertiesSection = () => {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -81,27 +87,57 @@ const PropertiesSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section
+      id="properties"
+      className="py-24 bg-gradient-to-b from-gray-50 to-white"
+    >
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-black mb-4">
-            Propriétés <span className="text-red-500">En Vedette</span>
+          <span className="inline-block px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm font-medium mb-4">
+            PROPRIÉTÉS EXCLUSIVES
+          </span>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Propriétés{" "}
+            <span className="text-red-600 relative">
+              En Vedette
+              <svg
+                className="absolute -bottom-2 left-0 w-full"
+                viewBox="0 0 200 8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 4C50 4 50 1 100 1C150 1 150 7 200 7"
+                  stroke="#dc2626"
+                  strokeWidth="2"
+                  fill="none"
+                />
+              </svg>
+            </span>
           </h2>
-          <p className="text-xl text-gray-600">
-            Découvrez nos propriétés premium soigneusement sélectionnées
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Découvrez nos propriétés premium soigneusement sélectionnées pour
+            répondre à vos besoins
           </p>
         </div>
 
         {domLoaded && (
           <div className="relative px-4 md:px-12 mb-16">
-            <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
-              <ChevronLeft className="text-red-500 h-6 w-6" />
+            <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 hover:shadow-xl transition-all">
+              <ChevronLeft className="text-red-600 h-6 w-6" />
             </div>
 
             <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
+              modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
               spaceBetween={24}
               slidesPerView={1}
+              effect="coverflow"
+              coverflowEffect={{
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: false,
+              }}
               navigation={{
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
@@ -121,15 +157,18 @@ const PropertiesSection = () => {
               breakpoints={{
                 640: {
                   slidesPerView: 1,
+                  effect: "slide",
                 },
                 768: {
                   slidesPerView: 2,
+                  effect: "slide",
                 },
                 1024: {
                   slidesPerView: 3,
+                  effect: "coverflow",
                 },
               }}
-              className="properties-swiper"
+              className="properties-swiper py-10"
             >
               {properties.map((property) => (
                 <SwiperSlide key={property.id} className="h-auto">
@@ -138,17 +177,18 @@ const PropertiesSection = () => {
               ))}
             </Swiper>
 
-            <div className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
-              <ChevronRight className="text-red-500 h-6 w-6" />
+            <div className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 hover:shadow-xl transition-all">
+              <ChevronRight className="text-red-600 h-6 w-6" />
             </div>
           </div>
         )}
 
         <div className="swiper-pagination flex justify-center items-center space-x-2 my-8"></div>
 
-        <div className="text-center mt-8">
-          <Button className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg shadow-md transform transition-transform hover:scale-105">
-            Voir Toutes les Propriétés
+        <div className="text-center mt-12">
+          <Button className="bg-red-600 hover:bg-red-700 text-white px-8 py-6 rounded-lg shadow-md hover:shadow-xl transform transition-all hover:-translate-y-1 group">
+            <span className="font-medium">Voir Toutes les Propriétés</span>
+            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </div>

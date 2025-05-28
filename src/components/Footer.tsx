@@ -206,7 +206,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-white font-medium">Adresse</p>
-                  <p>123 Avenue Immobilière, Miami, FL</p>
+                  <p>Sahloul 4, Sousse</p>
                   <p className="text-sm mt-1">Lun - Ven: 9h - 18h</p>
                 </div>
               </div>

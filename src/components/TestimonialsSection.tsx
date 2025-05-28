@@ -15,7 +15,7 @@ const TestimonialsSection = () => {
 
   const testimonials = [
     {
-      name: "Sarah Johnson",
+      name: "Sarah Mbarek",
       role: "Propriétaire",
       image:
         "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=150&h=150",
@@ -24,7 +24,7 @@ const TestimonialsSection = () => {
       rating: 5,
     },
     {
-      name: "Michael Chen",
+      name: "Amir Ammar",
       role: "Acheteur",
       image:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
@@ -33,7 +33,7 @@ const TestimonialsSection = () => {
       rating: 5,
     },
     {
-      name: "Emily Rodriguez",
+      name: "Mariem Hsin",
       role: "Vendeuse",
       image:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
@@ -42,7 +42,7 @@ const TestimonialsSection = () => {
       rating: 5,
     },
     {
-      name: "Jean Dupont",
+      name: "Sami Ghzel",
       role: "Propriétaire",
       image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",

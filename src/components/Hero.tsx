@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+    <section
+      id="hero"
+      className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-black"
+    >
       {/* Background with overlay */}
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-25"></div>
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80"></div>
@@ -62,7 +65,10 @@ const Hero = () => {
                 la recherche du bien parfait, qu'il soit résidentiel ou
                 commercial.
               </p>
-              <Button className="bg-red-600 hover:bg-red-700 text-white rounded-full px-8 py-3 mb-4 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white rounded-full px-8 py-3 mb-4 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                onClick={() => (window.location.href = "#contact")}
+              >
                 Consultation Gratuite
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>

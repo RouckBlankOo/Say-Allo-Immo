@@ -29,6 +29,7 @@ const PropertiesSection = () => {
       try {
         setLoading(true);
         const data = await getProperties();
+        console.log("Fetched properties:", data);
         setProperties(data);
         setError(null);
       } catch (err) {
@@ -171,7 +172,7 @@ const PropertiesSection = () => {
               className="properties-swiper py-10"
             >
               {properties.map((property) => (
-                <SwiperSlide key={property.id} className="h-auto">
+                <SwiperSlide key={property._id} className="h-auto">
                   <PropertyCard {...property} />
                 </SwiperSlide>
               ))}

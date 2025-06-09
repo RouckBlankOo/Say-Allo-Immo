@@ -8,7 +8,10 @@ const Hero = () => {
       className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-black"
     >
       {/* Background with overlay */}
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-25"></div>
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-90"
+        style={{ backgroundImage: "url('../assets/bgHero.jpg')" }}
+      ></div>
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80"></div>
 
       <div className="relative container mx-auto px-4 py-20">

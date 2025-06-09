@@ -188,7 +188,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-white font-medium">Téléphone</p>
-                  <p>+216 54 311 907</p>
+                  <p>+216 52 212 159</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3 group">
@@ -197,7 +197,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-white font-medium">Email</p>
-                  <p>info@sayalloimmo.com</p>
+                  <p>sayallo@outlook.fr</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3 group">
@@ -206,7 +206,9 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-white font-medium">Adresse</p>
-                  <p>Sahloul 4, Sousse</p>
+                  <p>
+                    Rue Taher sfar, immeuble Bouraoui 2, B210, Sousse, Tunisia
+                  </p>
                   <p className="text-sm mt-1">Lun - Ven: 9h - 18h</p>
                 </div>
               </div>

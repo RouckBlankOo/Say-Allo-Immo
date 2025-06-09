@@ -1,328 +1,160 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getPropertyById } from "@/api/propertyApi";
-import { Property } from "@/api/propertyApi";
-import {
-  Bed,
-  Bath,
-  AreaChart,
-  Calendar,
-  Phone,
-  Mail,
-  MapPin,
-  Home,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  ArrowLeft,
-  Building,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from "react";
+import axios from "axios";
 
-// Fixed agency information
-const AGENCY_INFO = {
-  name: "SAY ALLO IMMO",
-  tagline: "Votre Partenaire Immobilier",
-  logo: "/assets/logoS.png", // Assuming you have this logo in your assets
-  address: "Sahloul 4, Sousse",
-  phone: "+216 54 311 907",
-  email: "info@sayalloimmo.com",
-  hours: "Lun - Ven: 9h - 18h",
-  socialMedia: {
-    facebook: "#",
-    twitter: "#",
-    instagram: "#",
-    linkedin: "#",
-  },
-};
+interface ContactFormProps {
+  propertyId?: string;
+  propertyTitle?: string;
+}
 
-const PropertyDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const [property, setProperty] = useState<Property | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const ContactForm: React.FC<ContactFormProps> = ({
+  propertyId,
+  propertyTitle,
+}) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+    propertyId: propertyId || "",
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        if (!id) throw new Error("Property ID is missing");
+  const [status, setStatus] = useState({
+    submitting: false,
+    success: null as boolean | null,
+    message: "",
+  });
 
-        // Fetch property data
-        const propertyData = await getPropertyById(id);
-        setProperty(propertyData);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch property details:", err);
-        setError("Failed to load property details. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    fetchData();
-  }, [id]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus({ submitting: true, success: null, message: "" });
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-8"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <div className="h-96 bg-gray-200 rounded-lg mb-8"></div>
-              <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-              <div className="h-32 bg-gray-200 rounded mb-8"></div>
-            </div>
-            <div className="lg:col-span-1">
-              <div className="h-64 bg-gray-200 rounded-lg mb-4"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/contact",
+        formData
+      );
 
-  if (error || !property) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-8 py-6 rounded-lg max-w-xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4">Oops!</h2>
-          <p>{error || "Property not found"}</p>
-          <Link to="/">
-            <Button
-              variant="outline"
-              className="mt-6 border-red-500 text-red-500 hover:bg-red-50"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Retour à l'accueil
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+      setStatus({
+        submitting: false,
+        success: true,
+        message: "Your message has been sent successfully!",
+      });
 
-  // Base URL for images
-  const imageUrl = property.image?.startsWith("http")
-    ? property.image
-    : `http://localhost:5000/${property.image}`;
-
-  // Placeholder image if none provided
-  const displayImage = property.image
-    ? imageUrl
-    : "https://via.placeholder.com/1200x800?text=No+Image+Available";
-
-  const planImageUrl = property.planImage?.startsWith("http")
-    ? property.planImage
-    : property.planImage
-    ? `http://localhost:5000/${property.planImage}`
-    : null;
+      // Reset form after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+        propertyId: propertyId || "",
+      });
+    } catch (error) {
+      setStatus({
+        submitting: false,
+        success: false,
+        message: "Failed to send message. Please try again.",
+      });
+    }
+  };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="container mx-auto px-4 py-16">
-        {/* Back button */}
-        <Link
-          to="/"
-          className="inline-flex items-center text-gray-600 hover:text-red-600 mb-8 transition-colors"
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h3 className="text-xl font-bold mb-4">
+        {propertyTitle ? `Enquire about: ${propertyTitle}` : "Contact Us"}
+      </h3>
+
+      {status.success !== null && (
+        <div
+          className={`p-4 mb-4 rounded-md ${
+            status.success
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Retour aux propriétés
-        </Link>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left column - Property details */}
-          <div className="lg:col-span-2">
-            {/* Property header */}
-            <div className="mb-8">
-              <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
-                <div>
-                  <div className="flex gap-2 mb-2">
-                    {property.tags &&
-                      property.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                            tag === "À Vendre"
-                              ? "bg-green-500 text-white"
-                              : tag === "À Louer"
-                              ? "bg-blue-500 text-white"
-                              : tag === "En Vedette"
-                              ? "bg-red-500 text-white"
-                              : tag === "Tendance"
-                              ? "bg-black text-white"
-                              : "bg-gray-500 text-white"
-                          }`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                  </div>
-                  <h1 className="text-3xl font-bold text-gray-900">
-                    {property.title}
-                  </h1>
-                  <p className="text-gray-500 flex items-center mt-2">
-                    <MapPin className="h-4 w-4 mr-1 text-red-500" />{" "}
-                    {property.location}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-3xl font-bold text-red-600">
-                    {property.price}
-                    {property.isRental ? "/mois" : ""}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    <Calendar className="inline h-3 w-3 mr-1" /> Ajouté le{" "}
-                    {property.dateAdded || new Date().toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Property image */}
-            <div className="rounded-xl overflow-hidden mb-8 shadow-lg">
-              <img
-                src={displayImage}
-                alt={property.title}
-                className="w-full h-[500px] object-cover"
-              />
-            </div>
-
-            {/* Property features */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className="bg-white p-4 rounded-lg shadow flex flex-col items-center">
-                <Bed className="h-6 w-6 text-red-500 mb-2" />
-                <span className="text-sm text-gray-500">Chambres</span>
-                <span className="text-xl font-bold">
-                  {property.beds || "N/A"}
-                </span>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow flex flex-col items-center">
-                <Bath className="h-6 w-6 text-red-500 mb-2" />
-                <span className="text-sm text-gray-500">Salles de bain</span>
-                <span className="text-xl font-bold">
-                  {property.baths || "N/A"}
-                </span>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow flex flex-col items-center">
-                <AreaChart className="h-6 w-6 text-red-500 mb-2" />
-                <span className="text-sm text-gray-500">Surface</span>
-                <span className="text-xl font-bold">{property.sqft} m²</span>
-              </div>
-            </div>
-
-            {/* Tabs for description and floor plan */}
-            <Tabs defaultValue="description" className="mb-8">
-              <TabsList className="w-full grid grid-cols-2">
-                <TabsTrigger value="description">Description</TabsTrigger>
-                <TabsTrigger value="floorplan" disabled={!planImageUrl}>
-                  Plan d'étage
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="description" className="mt-4">
-                <Card className="p-6">
-                  <div className="prose max-w-none">
-                    <h3 className="text-xl font-bold mb-4">
-                      À propos de cette propriété
-                    </h3>
-                    <p className="whitespace-pre-line text-gray-700">
-                      {property.description}
-                    </p>
-                  </div>
-                </Card>
-              </TabsContent>
-              {planImageUrl && (
-                <TabsContent value="floorplan" className="mt-4">
-                  <Card className="p-6">
-                    <h3 className="text-xl font-bold mb-4">Plan d'étage</h3>
-                    <img
-                      src={planImageUrl}
-                      alt="Plan d'étage"
-                      className="w-full rounded-lg"
-                    />
-                  </Card>
-                </TabsContent>
-              )}
-            </Tabs>
-          </div>
-
-          {/* Right column - Agency info and contact */}
-          <div className="lg:col-span-1">
-            <Card className="p-6 shadow-lg border-0 sticky top-8">
-              <div className="text-center mb-6">
-                <div className="bg-gradient-to-br from-red-500 to-red-700 p-3 rounded-lg shadow-md inline-block mb-4">
-                  <Building className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold">{AGENCY_INFO.name}</h3>
-                <p className="text-red-400 text-sm">{AGENCY_INFO.tagline}</p>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="flex items-start">
-                  <MapPin className="h-5 w-5 text-red-500 mr-3 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700">{AGENCY_INFO.address}</p>
-                    <p className="text-sm text-gray-500">{AGENCY_INFO.hours}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Phone className="h-5 w-5 text-red-500 mr-3" />
-                  <p className="text-gray-700">{AGENCY_INFO.phone}</p>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="h-5 w-5 text-red-500 mr-3" />
-                  <p className="text-gray-700">{AGENCY_INFO.email}</p>
-                </div>
-              </div>
-
-              <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
-                Contacter l'agence
-              </Button>
-
-              {/* Social media links */}
-              <div className="flex justify-center gap-4 mt-6">
-                <a
-                  href={AGENCY_INFO.socialMedia.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
-                >
-                  <Facebook className="h-5 w-5 text-white" />
-                </a>
-                <a
-                  href={AGENCY_INFO.socialMedia.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
-                >
-                  <Twitter className="h-5 w-5 text-white" />
-                </a>
-                <a
-                  href={AGENCY_INFO.socialMedia.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
-                >
-                  <Instagram className="h-5 w-5 text-white" />
-                </a>
-                <a
-                  href={AGENCY_INFO.socialMedia.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
-                >
-                  <Linkedin className="h-5 w-5 text-white" />
-                </a>
-              </div>
-            </Card>
-          </div>
+          {status.message}
         </div>
-      </div>
+      )}
+
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="name">
+            Full Name *
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="email">
+            Email Address *
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="phone">
+            Phone Number *
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="message">
+            Message *
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+            rows={4}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          disabled={status.submitting}
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
+        >
+          {status.submitting ? "Sending..." : "Send Message"}
+        </button>
+      </form>
     </div>
   );
 };
 
-export default PropertyDetail;
+export default ContactForm;

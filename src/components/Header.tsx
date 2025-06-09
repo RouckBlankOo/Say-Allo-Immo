@@ -127,15 +127,9 @@ const Header = () => {
               <div className="hidden lg:flex items-center space-x-2 bg-red-50 px-4 py-2 rounded-full">
                 <Phone className="h-4 w-4 text-red-600" />
                 <span className="text-sm font-medium text-gray-700">
-                  +216 54 311 907
+                  +216 52 212 159
                 </span>
               </div>
-              <Button
-                className="bg-red-600 hover:bg-red-700 text-white rounded-full px-6 shadow-md transition-all duration-200 text-sm font-medium hover:shadow-lg hover:-translate-y-0.5"
-                onClick={() => setShowEmailInput(true)}
-              >
-                Me Contacter Via Email
-              </Button>
               <Button
                 variant="outline"
                 className="md:hidden border-red-600 text-red-600 hover:bg-red-50 rounded-full"

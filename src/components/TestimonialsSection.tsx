@@ -15,39 +15,42 @@ const TestimonialsSection = () => {
 
   const testimonials = [
     {
-      name: "Sarah Mbarek",
+      name: "Khalil Hafsa",
       role: "Propriétaire",
-      image:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=150&h=150",
-      content:
-        "Say Allo Immo a rendu mon achat immobilier incroyablement fluide. Leur équipe était professionnelle, compétente et toujours disponible pour répondre à mes questions.",
+      image: "assets/Khalil.jpg",
+      content: "Un grand merci à Mme Abir, super pro avec élégance.",
       rating: 5,
     },
     {
-      name: "Amir Ammar",
+      name: "Temimi Emeny ",
       role: "Acheteur",
-      image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
+      image: "assets/Temimi.jpg",
       content:
-        "J'ai travaillé avec de nombreuses agences immobilières, mais Say Allo Immo se démarque. Leur analyse de marché et leurs conseils m'ont aidé à trouver la maison parfaite.",
+        "Personne honnête, professionnelle et surtout serviable! Je recommande vivement. Merci, Abir 😘!",
       rating: 5,
     },
     {
-      name: "Mariem Hsin",
+      name: "Emilie Troubat",
       role: "Vendeuse",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
+      image: "assets/Emilie.jpg",
       content:
-        "Ils ont vendu ma maison 20% au-dessus du prix demandé en seulement deux semaines ! Leur stratégie marketing et leurs compétences de négociation sont exceptionnelles.",
+        "I totally recommend the service of  Abir! Super satisfied with the professionalism, responsiveness, follow-up and help from A to Z to get the house! Totally recommend!",
       rating: 5,
     },
     {
-      name: "Sami Ghzel",
+      name: "abd Samii Ben Ahmed",
       role: "Propriétaire",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",
+      image: "assets/Ahmed.jpg",
       content:
-        "L'équipe de Say Allo Immo est tout simplement extraordinaire. Ils ont su vendre mon bien dans un délai record tout en obtenant le meilleur prix possible.",
+        "Je recommande vivement, service professionnel et satisfaction garantie. Merci Abir, que du succès pour ton parcours !",
+      rating: 5,
+    },
+    {
+      name: "Rami Hafsa",
+      role: "Propriétaire",
+      image: "assets/Rami.jpg",
+      content:
+        "Ravi des services de « SAY ALLO ». Mme Abir, très pro, a compris mes besoins, maîtrisé le marché et m’a guidé parfaitement.",
       rating: 5,
     },
   ];

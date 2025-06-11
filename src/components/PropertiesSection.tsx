@@ -17,19 +17,15 @@ import { getProperties } from "@/api/propertyApi";
 import type { Property } from "@/api/propertyApi";
 
 const PropertiesSection = () => {
-  const [domLoaded, setDomLoaded] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setDomLoaded(true);
-
     const fetchProperties = async () => {
       try {
         setLoading(true);
         const data = await getProperties();
-        console.log("Fetched properties:", data);
         setProperties(data);
         setError(null);
       } catch (err) {
@@ -43,8 +39,7 @@ const PropertiesSection = () => {
     fetchProperties();
   }, []);
 
-  // Fallback content while loading
-  if (!domLoaded || loading) {
+  if (loading) {
     return (
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4 text-center">
@@ -67,7 +62,6 @@ const PropertiesSection = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">

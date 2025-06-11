@@ -19,13 +19,11 @@ const PropertyCard = ({
   isRental,
 }: Property) => {
   // Base URL for images
-  const imageUrl = image?.startsWith("http")
-    ? image
-    : `http://localhost:5000/${image}`;
+  const imageUrl = Array.isArray(image) && image.length > 0 ? image[0] : null;
 
   // Placeholder image if none provided
-  const displayImage = image
-    ? imageUrl
+  const displayImage = imageUrl
+    ? `https://api.sayalloimmo.com${imageUrl}`
     : "https://via.placeholder.com/800x600?text=No+Image+Available";
 
   return (

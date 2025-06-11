@@ -37,20 +37,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
-// Fixed agency information
 const AGENCY_INFO = {
   name: "SAY ALLO IMMO",
   tagline: "Votre Partenaire Immobilier",
-  logo: "/assets/logoS.png", // Assuming you have this logo in your assets
+  logo: "/assets/logoS.png",
   address: "Sahloul 4, Sousse",
-  phone: "+216 54 311 907",
-  email: "info@sayalloimmo.com",
+  phone: "+216 52 21 21 59",
+  email: "sayallo@outlook.fr",
   hours: "Lun - Ven: 9h - 18h",
   socialMedia: {
-    facebook: "#",
-    twitter: "#",
-    instagram: "#",
-    linkedin: "#",
+    facebook: "https://www.facebook.com/share/16bo3NdkHh/?mibextid=wwXIfr",
+    instagram:
+      "https://www.instagram.com/sayallo_immo?igsh=MW1pejkyODZybWEwaw==",
+    TikTok: "https://www.tiktok.com/@say_allo_immo?_t=ZM-8x40dZ6MI2o&_r=1",
   },
 };
 
@@ -61,8 +60,8 @@ const PropertyDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Contact form state
   const [contactForm, setContactForm] = useState({
     name: "",
     email: "",
@@ -77,7 +76,6 @@ const PropertyDetail = () => {
         setLoading(true);
         if (!id) throw new Error("Property ID is missing");
 
-        // Fetch property data
         const propertyData = await getPropertyById(id);
         setProperty(propertyData);
         setError(null);
@@ -104,7 +102,7 @@ const PropertyDetail = () => {
     setSubmitting(true);
 
     try {
-      await fetch("http://localhost:5000/api/contact", {
+      const response = await fetch("https://api.sayalloimmo.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -112,8 +110,9 @@ const PropertyDetail = () => {
           propertyTitle: property?.title,
         }),
       });
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       toast({
         title: "Message envoyé!",
@@ -121,7 +120,6 @@ const PropertyDetail = () => {
         variant: "default",
       });
 
-      // Reset form and close dialog
       setContactForm({ name: "", email: "", phone: "", message: "" });
       setOpen(false);
     } catch (error) {
@@ -135,6 +133,18 @@ const PropertyDetail = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev + 1 < (property?.image?.length || 0) ? prev + 1 : 0
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev - 1 >= 0 ? prev - 1 : (property?.image?.length || 1) - 1
+    );
   };
 
   if (loading) {
@@ -177,26 +187,19 @@ const PropertyDetail = () => {
     );
   }
 
-  // Base URL for images
-  const imageUrl = property.image?.startsWith("http")
-    ? property.image
-    : `http://localhost:5000/${property.image}`;
+  const displayImage =
+    Array.isArray(property.image) && property.image.length > 0
+      ? `https://api.sayalloimmo.com${property.image[currentImageIndex]}`
+      : "https://via.placeholder.com/1200x800?text=No+Image+Available";
 
-  // Placeholder image if none provided
-  const displayImage = property.image
-    ? imageUrl
-    : "https://via.placeholder.com/1200x800?text=No+Image+Available";
-
-  const planImageUrl = property.planImage?.startsWith("http")
-    ? property.planImage
-    : property.planImage
-    ? `http://localhost:5000/${property.planImage}`
-    : null;
+  const planImageUrl =
+    Array.isArray(property.planImage) && property.planImage.length > 0
+      ? `https://api.sayalloimmo.com${property.planImage[0]}`
+      : null;
 
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 py-16">
-        {/* Back button */}
         <Link
           to="/"
           className="inline-flex items-center text-gray-600 hover:text-red-600 mb-8 transition-colors"
@@ -205,9 +208,7 @@ const PropertyDetail = () => {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left column - Property details */}
           <div className="lg:col-span-2">
-            {/* Property header */}
             <div className="mb-8">
               <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                 <div>
@@ -253,16 +254,32 @@ const PropertyDetail = () => {
               </div>
             </div>
 
-            {/* Property image */}
-            <div className="rounded-xl overflow-hidden mb-8 shadow-lg">
+            <div className="rounded-xl overflow-hidden mb-8 shadow-lg relative">
               <img
                 src={displayImage}
-                alt={property.title}
+                alt={`${property.title} - Image ${currentImageIndex + 1}`}
                 className="w-full h-[500px] object-cover"
               />
+              {Array.isArray(property.image) && property.image.length > 1 && (
+                <>
+                  <Button
+                    onClick={prevImage}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                    aria-label="Previous image"
+                  >
+                    ←
+                  </Button>
+                  <Button
+                    onClick={nextImage}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                    aria-label="Next image"
+                  >
+                    →
+                  </Button>
+                </>
+              )}
             </div>
 
-            {/* Property features */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               <div className="bg-white p-4 rounded-lg shadow flex flex-col items-center">
                 <Bed className="h-6 w-6 text-red-500 mb-2" />
@@ -285,7 +302,6 @@ const PropertyDetail = () => {
               </div>
             </div>
 
-            {/* Tabs for description and floor plan */}
             <Tabs defaultValue="description" className="mb-8">
               <TabsList className="w-full grid grid-cols-2">
                 <TabsTrigger value="description">Description</TabsTrigger>
@@ -320,7 +336,6 @@ const PropertyDetail = () => {
             </Tabs>
           </div>
 
-          {/* Right column - Agency info and contact */}
           <div className="lg:col-span-1">
             <Card className="p-6 shadow-lg border-0 sticky top-8">
               <div className="text-center mb-6">
@@ -349,7 +364,6 @@ const PropertyDetail = () => {
                 </div>
               </div>
 
-              {/* Contact Dialog */}
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
@@ -473,7 +487,6 @@ const PropertyDetail = () => {
                 </DialogContent>
               </Dialog>
 
-              {/* Social media links */}
               <div className="flex justify-center gap-4 mt-6">
                 <a
                   href={AGENCY_INFO.socialMedia.facebook}
@@ -483,14 +496,7 @@ const PropertyDetail = () => {
                 >
                   <Facebook className="h-5 w-5 text-white" />
                 </a>
-                <a
-                  href={AGENCY_INFO.socialMedia.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
-                >
-                  <Twitter className="h-5 w-5 text-white" />
-                </a>
+
                 <a
                   href={AGENCY_INFO.socialMedia.instagram}
                   target="_blank"
@@ -500,12 +506,19 @@ const PropertyDetail = () => {
                   <Instagram className="h-5 w-5 text-white" />
                 </a>
                 <a
-                  href={AGENCY_INFO.socialMedia.linkedin}
+                  href={AGENCY_INFO.socialMedia.TikTok}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
                 >
-                  <Linkedin className="h-5 w-5 text-white" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="h-5 w-5 text-white"
+                  >
+                    <path d="M9.75 2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75 5.25 5.25 0 0 0 5.25 5.25.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75 8.25 8.25 0 0 1-5.25-1.875v6.375a4.5 4.5 0 1 1-6.75-3.75.75.75 0 0 1 .75.75 3 3 0 1 0 3-3V2.25z" />
+                  </svg>
                 </a>
               </div>
             </Card>

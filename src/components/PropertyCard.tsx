@@ -60,26 +60,6 @@ const PropertyCard = ({
               ))}
           </div>
 
-          {/* Action Buttons */}
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="bg-white/90 hover:bg-white border-red-500 hover:text-red-500"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Heart className="h-4 w-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="bg-white/90 hover:bg-white border-red-500 hover:text-red-500"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Share2 className="h-4 w-4" />
-            </Button>
-          </div>
-
           {/* Property Stats */}
           <div className="absolute bottom-4 right-4 flex gap-2 text-white">
             {beds && (

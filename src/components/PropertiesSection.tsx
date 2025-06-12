@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropertyCard from "./PropertyCard";
-import { Button } from "@/components/ui/button";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Navigation,
@@ -12,7 +11,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { getProperties } from "@/api/propertyApi";
 import type { Property } from "@/api/propertyApi";
 
@@ -20,6 +18,7 @@ const PropertiesSection = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const swiperRef = useRef(null);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -38,6 +37,18 @@ const PropertiesSection = () => {
 
     fetchProperties();
   }, []);
+
+  const handlePrevSlide = () => {
+    if (swiperRef.current?.swiper) {
+      swiperRef.current.swiper.slidePrev();
+    }
+  };
+
+  const handleNextSlide = () => {
+    if (swiperRef.current?.swiper) {
+      swiperRef.current.swiper.slideNext();
+    }
+  };
 
   if (loading) {
     return (
@@ -68,13 +79,12 @@ const PropertiesSection = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             <p>{error}</p>
-            <Button
+            <button
               onClick={() => window.location.reload()}
-              variant="outline"
-              className="mt-4 border-red-500 text-red-500 hover:bg-red-50"
+              className="mt-4 border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-50 transition"
             >
               Try Again
-            </Button>
+            </button>
           </div>
         </div>
       </section>
@@ -87,6 +97,7 @@ const PropertiesSection = () => {
       className="py-24 bg-gradient-to-b from-gray-50 to-white"
     >
       <div className="container mx-auto px-4">
+        {/* Header */}
         <div className="text-center mb-16">
           <span className="inline-block px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm font-medium mb-4">
             PROPRIÉTÉS EXCLUSIVES
@@ -115,13 +126,11 @@ const PropertiesSection = () => {
           </p>
         </div>
 
+        {/* Properties Carousel */}
         {properties.length > 0 ? (
-          <div className="relative px-4 md:px-12 mb-16">
-            <div className="swiper-button-prev absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 hover:shadow-xl transition-all">
-              <ChevronLeft className="text-red-600 h-6 w-6" />
-            </div>
-
+          <div className="mb-16">
             <Swiper
+              ref={swiperRef}
               modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
               spaceBetween={24}
               slidesPerView={1}
@@ -133,16 +142,10 @@ const PropertiesSection = () => {
                 modifier: 1,
                 slideShadows: false,
               }}
-              navigation={{
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-              }}
               pagination={{
-                el: ".swiper-pagination",
                 clickable: true,
-                bulletActiveClass: "bg-red-500 w-3 h-3",
-                bulletClass:
-                  "inline-block w-3 h-3 bg-gray-300 rounded-full mx-1 cursor-pointer transition-all",
+                bulletActiveClass: "!bg-red-500",
+                bulletClass: "!bg-gray-300 !opacity-100",
               }}
               autoplay={{
                 delay: 5000,
@@ -163,17 +166,56 @@ const PropertiesSection = () => {
                   effect: "coverflow",
                 },
               }}
-              className="properties-swiper py-10"
+              className="properties-swiper"
             >
               {properties.map((property) => (
-                <SwiperSlide key={property._id} className="h-auto">
+                <SwiperSlide key={property._id}>
                   <PropertyCard {...property} />
                 </SwiperSlide>
               ))}
             </Swiper>
 
-            <div className="swiper-button-next absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 hover:shadow-xl transition-all">
-              <ChevronRight className="text-red-600 h-6 w-6" />
+            {/* Navigation Arrows - Below Cards */}
+            <div className="flex justify-center items-center gap-4 mt-8">
+              <button
+                onClick={handlePrevSlide}
+                className="flex items-center justify-center w-12 h-12 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                aria-label="Previous slide"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+
+              <button
+                onClick={handleNextSlide}
+                className="flex items-center justify-center w-12 h-12 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                aria-label="Next slide"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         ) : (
@@ -183,15 +225,6 @@ const PropertiesSection = () => {
             </p>
           </div>
         )}
-
-        <div className="swiper-pagination flex justify-center items-center space-x-2 my-8"></div>
-
-        <div className="text-center mt-12">
-          <Button className="bg-red-600 hover:bg-red-700 text-white px-8 py-6 rounded-lg shadow-md hover:shadow-xl transform transition-all hover:-translate-y-1 group">
-            <span className="font-medium">Voir Toutes les Propriétés</span>
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </div>
       </div>
     </section>
   );

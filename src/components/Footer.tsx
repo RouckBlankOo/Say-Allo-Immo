@@ -67,14 +67,11 @@ const Footer = () => {
                 className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
                 aria-label="TikTok"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 256 256"
-                  className="h-6 w-6 text-white"
-                  fill="currentColor"
-                >
-                  <path d="M224,96a64.07,64.07,0,0,1-56-32v72a72,72,0,1,1-72-72,73.41,73.41,0,0,1,16,1.84V32h32a64.07,64.07,0,0,0,64,64ZM88,184a40,40,0,1,0,40-40H112v16a24,24,0,1,1-24,24Z"></path>
-                </svg>
+                <img
+                  src="/assets/tiktok.png"
+                  alt="TikTok"
+                  className="h-6 w-6"
+                />
               </a>
             </div>
           </div>

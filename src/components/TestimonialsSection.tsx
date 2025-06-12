@@ -46,7 +46,7 @@ const TestimonialsSection = () => {
       rating: 5,
     },
     {
-      name: "Rami Hafsa",
+      name: "Rami Ayachi",
       role: "Propriétaire",
       image: "assets/Rami.jpg",
       content:

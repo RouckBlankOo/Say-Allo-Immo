@@ -511,14 +511,11 @@ const PropertyDetail = () => {
                   rel="noopener noreferrer"
                   className="bg-gray-800 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="h-5 w-5 text-white"
-                  >
-                    <path d="M9.75 2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75 5.25 5.25 0 0 0 5.25 5.25.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75 8.25 8.25 0 0 1-5.25-1.875v6.375a4.5 4.5 0 1 1-6.75-3.75.75.75 0 0 1 .75.75 3 3 0 1 0 3-3V2.25z" />
-                  </svg>
+                  <img
+                    src="/assets/tiktok.png"
+                    alt="TikTok"
+                    className="h-6 w-6"
+                  />
                 </a>
               </div>
             </Card>
